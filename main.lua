@@ -6,7 +6,7 @@ local function addDot()
     angle=angle,
     distance=love.math.random(60, 100),
     seconds=0,
-    duration=0.4,
+    duration=0.5,
   })
 end
 
@@ -57,11 +57,9 @@ local function makeRepeater(sec)
   end
 end
 
-local dotTimer = makeRepeater(0.1)
+local dotTimer = makeRepeater(0.02)
 
 function love.update()
-  if dotTimer() then
-    for i = 1, 5 do addDot() end
-  end
+  if dotTimer() then addDot() end
   for i, dot in ipairs(dots) do updateDot(dot) end
 end
