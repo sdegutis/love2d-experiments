@@ -46,12 +46,21 @@ function love.draw()
   for i, dot in ipairs(dots) do drawDot(dot) end
 end
 
-local time = 0
-function love.update(dt)
-  time = time + dt
+local function makeRepeater(sec)
+  local time = 0
+  return function()
+    time = time + love.timer.getDelta()
+    if time >= sec then
+      time = 0
+      return true
+    end
+  end
+end
 
-  if time > 0.1 then
-    time=0
+local dotTimer = makeRepeater(0.1)
+
+function love.update()
+  if dotTimer() then
     for i = 1, 5 do addDot() end
   end
   for i, dot in ipairs(dots) do updateDot(dot) end
