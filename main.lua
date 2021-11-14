@@ -4,22 +4,38 @@ local function addDot()
   local angle = love.math.random()*math.pi*2
   table.insert(dots, {
     angle=angle,
-    distance=100,
+    distance=love.math.random(60, 100),
+    seconds=0,
+    duration=0.4,
   })
 end
 
-local function drawDot(dot)  
-  local x = math.cos(dot.angle) * dot.distance
-  local y = math.sin(dot.angle) * dot.distance
+local function drawDot(dot)
+  local percent = dot.seconds / dot.duration
+  local distance = dot.distance - (dot.distance * percent)
 
-  love.graphics.setColor(0, 1, 1, 0.5)
+  local x = math.cos(dot.angle) * distance
+  local y = math.sin(dot.angle) * distance
+
+  love.graphics.setColor(0, 1, 1, 0.5 * (1-percent) + 0.05)
   love.graphics.circle('fill', dot.x+x, dot.y+y, 5)
+end
+
+local function del(t, el)
+  for i = 1, #t do
+    if t[i] == el then
+      table.remove(t, i)
+      return
+    end
+  end
 end
 
 local function updateDot(dot)
   dot.x, dot.y = love.mouse.getPosition()
-  dot.angle = dot.angle + .1
-  if dot.angle >= math.pi*2 then dot.angle = 0 end
+  dot.seconds = dot.seconds + love.timer.getDelta()
+  if dot.seconds >= dot.duration then
+    del(dots, dot)
+  end
 end
 
 function love.load()
@@ -30,7 +46,13 @@ function love.draw()
   for i, dot in ipairs(dots) do drawDot(dot) end
 end
 
-function love.update()
-  if #dots == 0 then addDot() end
+local time = 0
+function love.update(dt)
+  time = time + dt
+
+  if time > 0.1 then
+    time=0
+    for i = 1, 5 do addDot() end
+  end
   for i, dot in ipairs(dots) do updateDot(dot) end
 end
