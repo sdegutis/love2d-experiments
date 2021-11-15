@@ -15,8 +15,8 @@ local function easeIn(x)
   -- if x < 0.5 then return 4 * x * x * x else return 1 - math.pow(-2 * x + 2, 3) / 2 end
   -- return x * x * x
   -- return 1 - math.pow(1 - x, 3)
-  return x
-  -- return x * x
+  -- return x
+  return x * x
   -- return math.sqrt(1 - math.pow(x - 1, 2))
 end
 
@@ -29,7 +29,7 @@ local function drawDot(dot)
   local x = math.cos(dot.angle) * distance
   local y = math.sin(dot.angle) * distance
 
-  love.graphics.setColor(0, 1, 1, 0.5 * (1-percent) - 0.05)
+  love.graphics.setColor(0, 1, 1, 0.5 * (percent) - 0.05)
   love.graphics.circle('fill', dot.x+x, dot.y+y, 5)
 end
 
